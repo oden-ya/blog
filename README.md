@@ -1,1 +1,1 @@
-# daily
+# Blog

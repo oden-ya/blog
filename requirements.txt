@@ -1,0 +1,7 @@
+Pillow
+sphinx
+esbonio
+rstcheck
+furo
+sphinx-autobuild
+myst_parser
