@@ -25,4 +25,10 @@ AWS
    aws/manegementAndGovernance/awsServiceCatalog
    aws/manegementAndGovernance/awsControlTower
    aws/manegementAndGovernance/amazonCloudWatch
+   aws/manegementAndGovernance/awsCloudTrail
+   aws/manegementAndGovernance/awsConfig
+   aws/manegementAndGovernance/awsHealth
+   aws/manegementAndGovernance/awsSystemsManager
+   aws/manegementAndGovernance/awsLicenseManager
+   aws/manegementAndGovernance/awsCloudFormation
    
