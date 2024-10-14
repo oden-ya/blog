@@ -22,3 +22,5 @@ AWS
    :caption: Manegement:
 
    aws/manegementAndGovernance/awsOrganizations
+   aws/manegementAndGovernance/awsServiceCatalog
+   
