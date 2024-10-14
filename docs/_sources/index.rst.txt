@@ -23,4 +23,6 @@ AWS
 
    aws/manegementAndGovernance/awsOrganizations
    aws/manegementAndGovernance/awsServiceCatalog
+   aws/manegementAndGovernance/awsControlTower
+   aws/manegementAndGovernance/amazonCloudWatch
    

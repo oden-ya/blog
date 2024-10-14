@@ -22,3 +22,5 @@ help:
 
 livehtml:
 	sphinx-autobuild -b html $(SOURCEDIR) $(BUILDDIR)
+
+## make livehtmlで実行可能
