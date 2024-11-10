@@ -31,4 +31,24 @@ AWS
    aws/manegementAndGovernance/awsSystemsManager
    aws/manegementAndGovernance/awsLicenseManager
    aws/manegementAndGovernance/awsCloudFormation
+
+Security,Identity & Compliance
+=================================
+.. toctree::
+   :maxdepth: 1
+   :caption: Security,Identity & Compliance:
+
+   aws/securityIdentityAndCompliance/awsIam
+   aws/securityIdentityAndCompliance/awsSts
+   aws/securityIdentityAndCompliance/amazonCognito
+   aws/securityIdentityAndCompliance/awsDirectoryService
+   aws/securityIdentityAndCompliance/awsKms
+   aws/securityIdentityAndCompliance/awsSecretsManager
+   aws/securityIdentityAndCompliance/awsCertificateManager
+   aws/securityIdentityAndCompliance/amazonDetective
+   aws/securityIdentityAndCompliance/amazonGuardDuty
+   aws/securityIdentityAndCompliance/amazonMacie
+   aws/securityIdentityAndCompliance/amazonInspector
    
+SRE
+=================================
