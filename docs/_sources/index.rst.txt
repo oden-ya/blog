@@ -90,6 +90,19 @@ Storage
    :caption: Object Storage:
 
    aws/storage/amazonS3
+   aws/storage/AmazonDataLifecycleManager
+   aws/storage/AmazonEfs
+   aws/storage/awsBackup
+   aws/storage/awsStorageGateway
+
+
+Networking & Content Delivery
+------------------------------
+.. toctree::
+   :maxdepth: 1
+   :caption: Object Storage:
+
+   aws/networkingAndContentDelivery/amazonVpc.md
    
 SRE
 =================================

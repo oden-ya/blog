@@ -68,7 +68,7 @@ AWSアカウントの設定変更、請求に関する設定などはルート�
 </ul>
 </li>
 <li><p><strong>ジョブ機能の管理ポリシー</strong>：AWS管理ポリシーのうち、特定のジョブ機能と連携するように設計されたポリシー（Administrator,Billing,Database Administratorなど）</p></li>
-<li><p><strong>Pernmissions Boundary(アクセス権限の境界)</strong>：IAMエンティティに対して通常のパーミッションを制限するためのポリシーである。IAMエンティティの権限はPernmissions PolicyとPernmissions BoundaryのAND部分が適用される</p></li>
+<li><p><strong>Pernmissions Boundary(アクセス権限の境界)</strong>：IAMエンティティに対して通常のパーミッションを制限するためのポリシーである。IAMエンティティの権限はPernmissions PolicyとPernmissions BoundaryのAND部分が適用される。自由にIAMロールを作成可能な状態にしてしまうと、利用者に与えられている権限や禁止したい操作を超えたIAMロールを作成してスイッチすることができてしまうため、Pernmissions Boundaryを利用して阻止することができる。</p></li>
 <li><p><strong>スイッチロール</strong>：特定のIAMユーザーから別のIAMロールに切り替えること。クロスアカウントでも設定が可能</p></li>
 <li><p><strong>混乱した代理問題</strong>：アクションを実行する許可を持たないエンティティがより高い特権を持つ別のエンティティに代わってそのアクションを許可するセキュリティの脆弱性問題。<br>
 最小権限の原則やアクションの明示的な拒否、STSによる期限設定、外部IDの設定などが回避策として挙げられる。</p></li>
@@ -85,6 +85,60 @@ AWSアカウントの設定変更、請求に関する設定などはルート�
 <li><p>単一アカウントの場合は、OR条件で適用される<br>
 →特定のアクションをDenyしたい場合は、明示的なDenyが必要</p></li>
 </ul>
+</section>
+<section id="rbacabac">
+<h2>RBACとABAC<a class="headerlink" href="#rbacabac" title="Link to this heading">¶</a></h2>
+<p>ポリシーによってRBAC（Roll-Based Access Control、ロールベースのアクセス制御）とABAC（Attribute-Based Access Control、属性ベースのアクセス制御）がある
+代表的なRBACには、ジョブ機能の管理ポリシーがあり、ABACは属性（タグ）を設定することで定義することができる。</p>
+<div class="highlight-json:abac-policy.json notranslate"><div class="highlight"><pre><span></span>{
+    &quot;Version&quot;: &quot;2012-10-17&quot;,
+    &quot;Statement&quot;: [
+        {
+            &quot;Effect&quot;: &quot;Allow&quot;,
+            &quot;Action&quot;: [
+                    &quot;rds:DescribeDBInstances&quot;,
+            ],
+            &quot;Resource&quot;: &quot;*&quot;
+        },
+        
+        {
+            &quot;Effect&quot;: &quot;Allow&quot;,
+            &quot;Action&quot;: [
+                &quot;rds:RebootDBInstance&quot;,
+            ],
+            &quot;Resource&quot;: &quot;*&quot;,
+            &quot;Condition&quot;: {
+                &quot;StringEquals&quot;: {
+                    &quot;aws:PrincipalTag/Department&quot;: &quot;DBAdmins&quot;,
+                    &quot;rds:db-tag/Environment&quot;: &quot;Production&quot;
+                }
+            }
+        }
+    ]
+}
+
+
+
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h2>ポリシーの評価論理<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
+<p>AWSアカウント内でのリクエストの許可または拒否の決定は以下のポリシーの評価倫理フローで判断することができる。
+<img alt="policy-eval-denyallow" src="../../_images/policy-eval-denyallow.jpeg" /></p>
+</section>
+<section id="tips">
+<h2>Tips<a class="headerlink" href="#tips" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>アイデンティティベースのポリシーは、IAM ユーザー、グループ、ロールにアタッチされる。これらのポリシーを使用すると、そのアイデンティティが実行できる内容 (そのアクセス許可) を指定できる。たとえば、John という名前の IAM ユーザーに Amazon EC2 RunInstances アクションを実行することを許可するポリシーをアタッチできる。</p></li>
+<li><p>リソースベースのポリシーはリソースにアタッチされる。例えば、リソースベースのポリシーをAmazon S3 バケット、Amazon SQS キュー、VPC エンドポイント、AWS Key Management Service 暗号化キー、Amazon DynamoDB テーブルとストリームにアタッチできる。</p></li>
+<li></li>
+</ul>
+</section>
+<section id="id5">
+<h2>参考<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h2>
+<p>https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/access_policies_identity-vs-resource.html</p>
+<p>https://qiita.com/tsukamoto/items/e069ca89d1b78a6e5c1f</p>
 </section>
 </section>
 
@@ -114,25 +168,63 @@ AWSアカウントの設定変更、請求に関する設定などはルート�
     </div>
 </search>
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>ナビゲーション</h3>
-<p class="caption" role="heading"><span class="caption-text">Manegement:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Multi-Account:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../manegementAndGovernance/awsOrganizations.html">AWS Organizations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manegementAndGovernance/awsServiceCatalog.html">AWS Service Catalog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manegementAndGovernance/awsControlTower.html">AWS Control Tower</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Monitoring:</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../manegementAndGovernance/amazonCloudWatch.html">Amazon CloudWatch</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manegementAndGovernance/awsCloudTrail.html">AWS CloudTrail</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manegementAndGovernance/awsConfig.html">AWS Config</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manegementAndGovernance/awsHealth.html">AWS Health</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Managemant:</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../manegementAndGovernance/awsSystemsManager.html">AWS Systems Manager</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manegementAndGovernance/awsLicenseManager.html">AWS License Manager</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deployment:</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../manegementAndGovernance/awsCloudFormation.html">AWS CloudFormation</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Security,Identity &amp; Compliance:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Identity and Access Management:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">AWS IAM</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authentication and Authorization:</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="awsSts.html">AWS STS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="amazonCognito.html">Amazon Cognito</a></li>
 <li class="toctree-l1"><a class="reference internal" href="awsDirectoryService.html">AWS Directory Service</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Encryption:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="awsKms.html">AWS KMS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="awsSecretsManager.html">AWS Sercrets Manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="awsCertificateManager.html">AWS Certificate Manager(ACM)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Protection:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="amazonDetective.html">Amazon Detective</a></li>
+<li class="toctree-l1"><a class="reference internal" href="amazonGuardDuty.html">Amazon GuardDuty</a></li>
+<li class="toctree-l1"><a class="reference internal" href="amazonMacie.html">Amazon Macie</a></li>
+<li class="toctree-l1"><a class="reference internal" href="amazonInspector.html">Amazon Inspector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="awsSecurityHub.html">AWS Security Hub</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Object Storage:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../storage/amazonS3.html">Amazon S3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../storage/AmazonDataLifecycleManager.html">Amazon Data Lifecycle Manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../storage/AmazonEfs.html">Amazon EFS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../storage/awsBackup.html">AWS Backup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../storage/awsStorageGateway.html">AWS Storage Gateway</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Object Storage:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../networkingAndContentDelivery/amazonVpc.html">Amazon VPC</a></li>
 </ul>
 
 <div class="relations">

@@ -2,7 +2,7 @@
 
 ## 概要
 - AWS及びオンプレを含むハイブリット環境向けオペレーションハブである
-- Amazon EC2 Simple Systems Manager（SSM）が前身である
+- Amazon EC2 Simple Systems Manager（SSM）が前身である。サーバー管理に必要な機能が多く存在する。
 
 ## 主な機能/特徴
 - **Parameter Store**：構成データやシークレット情報を管理する
